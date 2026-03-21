@@ -619,15 +619,33 @@
       }
 
       function setDefaultDates() {
-        const today = new Date();
-        const applicationDate = document.getElementById("applicationDate");
+  const today = new Date();
+  const applicationDate = document.getElementById("applicationDate");
+  const receiveDate = document.getElementById("receiveDate");
+  const purchaseDate = document.getElementById("purchaseDate");
 
-        if (!applicationDate.value) {
-          applicationDate.value = formatDateToInputValue(today);
-        }
+  if (!applicationDate.value) {
+    applicationDate.value = formatDateToInputValue(today);
+  }
 
-        updateDateConstraints();
-      }
+  const baseDate = new Date(applicationDate.value);
+  baseDate.setHours(0, 0, 0, 0);
+
+  const plus10 = new Date(baseDate);
+  plus10.setDate(plus10.getDate() + 10);
+
+  const plus10Value = formatDateToInputValue(plus10);
+
+  if (!receiveDate.value) {
+    receiveDate.value = plus10Value;
+  }
+
+  if (!purchaseDate.value) {
+    purchaseDate.value = plus10Value;
+  }
+
+  updateDateConstraints();
+}
 
       function getMinDateFromApplication() {
         const applicationDateValue = document.getElementById("applicationDate").value;
