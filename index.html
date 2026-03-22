@@ -16,6 +16,8 @@
         --success: #166534;
         --marker: #374151;
         --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        --disabled-bg: #f3f4f6;
+        --disabled-text: #9ca3af;
       }
 
       *,
@@ -191,6 +193,7 @@
         font-size: 16px;
         line-height: 1.4;
         overflow: hidden;
+        transition: background 0.2s ease, opacity 0.2s ease;
       }
 
       .choice-card input[type="radio"],
@@ -199,6 +202,17 @@
         height: 20px;
         margin: 0;
         flex: 0 0 auto;
+      }
+
+      .choice-card.is-disabled {
+        background: var(--disabled-bg);
+        color: var(--disabled-text);
+        cursor: not-allowed;
+        opacity: 0.75;
+      }
+
+      .choice-card.is-disabled input {
+        pointer-events: none;
       }
 
       .note {
@@ -301,6 +315,11 @@
         transform: translateY(0);
       }
 
+      .form-locked {
+        pointer-events: none;
+        opacity: 0.72;
+      }
+
       @media (max-width: 768px) {
         body {
           padding: 10px;
@@ -376,7 +395,7 @@
   </head>
   <body>
     <div class="container">
-      <div class="card">
+      <div class="card" id="formCard">
         <h1>学割証申請フォーム</h1>
         <p class="lead">
           必要事項を入力して送信してください。送信後、受付番号が表示されます。
@@ -494,11 +513,11 @@
             <label class="main-label">
               <span class="marker">▫️</span>目的 <span class="required">必須</span>
             </label>
-            <div class="choice-grid choice-inline-2">
-              <label class="choice-card"><input type="radio" name="purpose" value="通学" /> 通学</label>
-              <label class="choice-card"><input type="radio" name="purpose" value="観光" /> 観光</label>
-              <label class="choice-card"><input type="radio" name="purpose" value="進路関係" /> 進路関係</label>
-              <label class="choice-card"><input type="radio" name="purpose" value="その他" /> その他</label>
+            <div class="choice-grid choice-inline-2" id="purposeGroup">
+              <label class="choice-card" data-purpose-value="通学"><input type="radio" name="purpose" value="通学" /> 通学</label>
+              <label class="choice-card" data-purpose-value="観光"><input type="radio" name="purpose" value="観光" /> 観光</label>
+              <label class="choice-card" data-purpose-value="進路関係"><input type="radio" name="purpose" value="進路関係" /> 進路関係</label>
+              <label class="choice-card" data-purpose-value="その他"><input type="radio" name="purpose" value="その他" /> その他</label>
             </div>
           </div>
 
@@ -627,7 +646,7 @@
           </div>
         </div>
 
-        <div class="submit-wrap">
+        <div class="submit-wrap" id="submitWrap">
           <button id="submitButton" type="button">送信</button>
           <div id="message"></div>
         </div>
@@ -635,7 +654,7 @@
     </div>
 
     <script>
-      const WORKER_URL = "https://yononaka-gakuwari.tarohayata.workers.dev";
+      const WORKER_URL = "https://YOUR-WORKER.example.workers.dev";
 
       function getRadioValue(name) {
         const checked = document.querySelector(`input[name="${name}"]:checked`);
@@ -658,6 +677,17 @@
           message.classList.remove("success");
         }
         message.innerHTML = text;
+      }
+
+      function lockFormAfterSuccess() {
+        document.getElementById("formCard").classList.add("form-locked");
+        document.getElementById("submitWrap").classList.add("hidden");
+
+        document.querySelectorAll("input, select, textarea, button").forEach(el => {
+          el.disabled = true;
+        });
+
+        document.getElementById("message").classList.add("show");
       }
 
       function setDefaultDates() {
@@ -763,6 +793,44 @@
         }
       }
 
+      function updatePurposeRestrictions() {
+        const ticketType = getRadioValue("ticketType");
+        const purposeCards = document.querySelectorAll("#purposeGroup .choice-card");
+        const purposeRadios = document.querySelectorAll('input[name="purpose"]');
+
+        if (ticketType === "回数券") {
+          purposeRadios.forEach(radio => {
+            const parent = radio.closest(".choice-card");
+            const isCommuting = radio.value === "通学";
+
+            if (isCommuting) {
+              radio.disabled = false;
+              parent.classList.remove("is-disabled");
+            } else {
+              radio.checked = false;
+              radio.dataset.wasChecked = "false";
+              radio.disabled = true;
+              parent.classList.add("is-disabled");
+            }
+          });
+
+          const commutingRadio = document.querySelector('input[name="purpose"][value="通学"]');
+          if (commutingRadio && !commutingRadio.checked) {
+            commutingRadio.checked = true;
+            commutingRadio.dataset.wasChecked = "true";
+          }
+
+          document.getElementById("purposeOther").value = "";
+          document.getElementById("purposeOtherSection").classList.add("hidden");
+        } else {
+          purposeRadios.forEach(radio => {
+            const parent = radio.closest(".choice-card");
+            radio.disabled = false;
+            parent.classList.remove("is-disabled");
+          });
+        }
+      }
+
       function updateTicketTypeFields() {
         const ticketType = getRadioValue("ticketType");
         const isLongDistance = ticketType === "遠距離乗車券";
@@ -788,7 +856,9 @@
           document.getElementById("couponCount").value = "";
         }
 
+        updatePurposeRestrictions();
         updateNoSamePurchaseField();
+        updatePurposeOtherField();
       }
 
       function updateNoSamePurchaseField() {
@@ -808,8 +878,10 @@
         } else {
           section.classList.remove("show");
           setTimeout(() => {
-            section.classList.add("hidden");
-          }, 200);
+            if (!section.classList.contains("show")) {
+              section.classList.add("hidden");
+            }
+          }, 250);
           document.getElementById("noSamePurchase").checked = false;
         }
       }
@@ -827,7 +899,8 @@
 
       function updatePurposeOtherField() {
         const purpose = getRadioValue("purpose");
-        const isOther = purpose === "その他";
+        const ticketType = getRadioValue("ticketType");
+        const isOther = purpose === "その他" && ticketType !== "回数券";
 
         document.getElementById("purposeOtherSection").classList.toggle("hidden", !isOther);
 
@@ -851,7 +924,9 @@
         const radios = document.querySelectorAll('input[type="radio"]');
 
         radios.forEach(radio => {
-          radio.addEventListener("click", function () {
+          radio.addEventListener("click", function (e) {
+            if (this.disabled) return;
+
             const wasChecked = this.dataset.wasChecked === "true";
             const name = this.name;
 
@@ -995,10 +1070,9 @@
             true
           );
 
-          document.querySelector(".card").scrollIntoView({ behavior: "smooth" });
+          lockFormAfterSuccess();
         } catch (error) {
           showMessage("エラー: " + error.message);
-        } finally {
           submitButton.disabled = false;
         }
       }
