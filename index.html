@@ -918,7 +918,7 @@
 
       function updateShippingAddressField() {
         const receiveMethod = getRadioValue("receiveMethod");
-        const isHomeDelivery = receiveMethod === "自宅(送料500円)";
+        const isHomeDelivery = receiveMethod === "自宅(代々木高校からの送料500円必要)";
 
         document.getElementById("shippingAddressSection").classList.toggle("hidden", !isHomeDelivery);
 
@@ -981,7 +981,7 @@
         if (!data.companyName1) return "鉄道会社名1を選択してください。";
         if (!data.route1) return "乗車区間1を入力してください。";
         if (!data.receiveMethod) return "受け取り方法を選択してください。";
-        if (data.receiveMethod === "自宅(送料500円)" && !data.shippingAddress) {
+        if (data.receiveMethod === "自宅(代々木高校からの送料500円必要)" && !data.shippingAddress) {
           return "発送先住所を入力してください。";
         }
         if (!data.receiveDate) return "受け取り希望日を入力してください。";
