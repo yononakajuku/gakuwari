@@ -970,12 +970,14 @@ button:disabled {
           }
 
           showMessage(
-            result.message +
-              "<br><br>受付番号：<strong>" +
-              result.receiptNo +
-              "</strong><br>この番号を控えてください。",
-            true
-          );
+  result.message +
+    "<br><br>受付番号：<strong>" +
+    result.receiptNo +
+    "</strong><br>この番号を控えてください。" +
+    "<br><br>申請内容の控えをメールでも送信しました。" +
+    "<br>届かない場合は、迷惑メールフォルダもご確認ください。",
+  true
+);
 
           document.querySelector(".card").scrollIntoView({ behavior: "smooth" });
         } catch (error) {
