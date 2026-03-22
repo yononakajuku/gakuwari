@@ -644,8 +644,10 @@
         </div>
 
         <div class="submit-wrap" id="submitWrap">
-          <button id="submitButton" type="button">送信</button>
-          <div id="message"></div>
+  <button id="submitButton" type="button">送信</button>
+</div>
+
+<div id="message"></div>
         </div>
       </div>
     </div>
@@ -685,13 +687,13 @@
     el.disabled = true;
   });
 
-  // ラジオ・チェックの見た目もクリック不可に
+  // ラジオ・チェックの見た目もクリック不可
   document.querySelectorAll(".choice-card").forEach(el => {
     el.style.pointerEvents = "none";
     el.style.opacity = "0.75";
   });
 
-  // メッセージはそのまま表示
+  // メッセージは表示したまま
   document.getElementById("message").classList.add("show");
 }
 
