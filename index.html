@@ -5,334 +5,189 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>学割証申請フォーム</title>
     <style>
-      :root {
-        --bg: #f4f5f7;
-        --card: #ffffff;
-        --text: #1f2937;
-        --subtext: #6b7280;
-        --border: #d1d5db;
-        --accent: #111827;
-        --danger: #dc2626;
-        --success: #166534;
-        --marker: #374151;
-        --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-      }
+:root {
+  --bg: #f4f5f7;
+  --card: #ffffff;
+  --text: #1f2937;
+  --subtext: #6b7280;
+  --border: #d1d5db;
+  --accent: #111827;
+  --danger: #dc2626;
+  --success: #16a34a;
+}
 
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
+/* ===== 全体 ===== */
+* {
+  box-sizing: border-box;
+}
 
-      html {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        overflow-x: hidden;
-      }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
 
-      body {
-        margin: 0;
-        padding: 8px;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-        background: var(--bg);
-        color: var(--text);
-        font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
-          "Yu Gothic", "Meiryo", sans-serif;
-      }
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
 
-      .container {
-        width: 100%;
-        max-width: 860px;
-        margin: 0 auto;
-        overflow-x: hidden;
-      }
+/* ===== カード ===== */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
 
-      .card {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        padding: 16px;
-        border-radius: 20px;
-        background: var(--card);
-        box-shadow: var(--shadow);
-        overflow-x: hidden;
-      }
+/* ===== 見出し ===== */
+h1 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
 
-      h1 {
-        margin: 0 0 8px 0;
-        font-size: 28px;
-        line-height: 1.3;
-      }
+h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
 
-      .lead {
-        margin: 0 0 20px 0;
-        color: var(--subtext);
-        font-size: 15px;
-        line-height: 1.6;
-      }
+/* ===== フィールド ===== */
+.field {
+  margin-bottom: 16px;
+}
 
-      .section {
-        width: 100%;
-        max-width: 100%;
-        margin: 0 0 16px 0;
-        padding: 14px;
-        border: 1px solid #ececec;
-        border-radius: 16px;
-        background: #fafafa;
-        overflow-x: hidden;
-      }
+.label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
 
-      .section-title {
-        margin: 0 0 14px 0;
-        font-size: 18px;
-        font-weight: 700;
-      }
+.required {
+  color: var(--danger);
+  font-size: 12px;
+  margin-left: 6px;
+}
 
-      .field {
-        width: 100%;
-        max-width: 100%;
-        margin: 0 0 16px 0;
-      }
+/* ===== 入力 ===== */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  font-size: 16px;
+  background: #fff;
+}
 
-      .field:last-child {
-        margin-bottom: 0;
-      }
+/* ===== ラジオ・チェック ===== */
+.choice-grid {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+}
 
-      label.main-label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 1.5;
-      }
+.choice {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+}
 
-      .marker {
-        color: var(--marker);
-        margin-right: 6px;
-      }
+.choice input {
+  transform: scale(1.2);
+}
 
-      .required {
-        color: var(--danger);
-        font-size: 12px;
-        font-weight: 700;
-        margin-left: 6px;
-      }
+/* ===== 説明文 ===== */
+.note {
+  font-size: 13px;
+  color: var(--subtext);
+  margin-top: 6px;
+}
 
-      .row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-        width: 100%;
-        max-width: 100%;
-      }
+/* ===== ボタン ===== */
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: #0f172a;
+  color: white;
+  font-size: 16px;
+}
 
-      .choice-grid {
-        display: grid;
-        gap: 10px;
-        width: 100%;
-        max-width: 100%;
-      }
+/* ===== 非表示 ===== */
+.hidden {
+  display: none;
+}
 
-      .choice-inline-2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+/* ===== スマホ崩れ防止 ===== */
+input, textarea {
+  max-width: 100%;
+}
 
-      .choice-inline-3 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
+/* ===== 余白調整（今回のメイン修正） ===== */
 
-      .choice-inline-4 {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
+/* 往復/片道 → 鉄道会社名2 の間 */
+#longDistanceSection1 {
+  margin-bottom: 20px;
+}
 
-      input[type="text"],
-      input[type="number"],
-      input[type="date"],
-      input[type="email"],
-      select,
-      textarea {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        margin: 0;
-        padding: 12px 14px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: #fff;
-        color: var(--text);
-        font-size: 16px;
-        line-height: 1.4;
-        appearance: none;
-        -webkit-appearance: none;
-      }
+/* 往復/片道2 → 同時購入しない の間 */
+#longDistanceSection2 {
+  margin-bottom: 20px;
+}
 
-      textarea {
-        min-height: 110px;
-        resize: vertical;
-      }
+/* 同時購入しない */
+#noSamePurchaseSection {
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
 
-      .choice-card {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        max-width: 100%;
-        min-height: 52px;
-        margin: 0;
-        padding: 12px 14px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: #fff;
-        cursor: pointer;
-        font-size: 16px;
-        line-height: 1.4;
-        overflow: hidden;
-      }
+/* 各セクションの余白を統一 */
+#longDistanceSection1,
+#longDistanceSection2,
+#noSamePurchaseSection,
+#shippingAddressSection,
+#satelliteNameOtherSection,
+#purposeOtherSection,
+#couponCountSection {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
 
-      .choice-card input[type="radio"],
-      .choice-card input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        margin: 0;
-        flex: 0 0 auto;
-      }
+/* ===== 日付欄の崩れ防止 ===== */
+input[type="date"] {
+  appearance: none;
+}
 
-      .note {
-        margin-top: 8px;
-        color: var(--subtext);
-        font-size: 13px;
-        line-height: 1.6;
-      }
+/* ===== スマホ用微調整 ===== */
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
 
-      .hidden {
-        display: none;
-      }
+  .card {
+    padding: 14px;
+  }
 
-      .submit-wrap {
-        width: 100%;
-        max-width: 100%;
-        padding-top: 8px;
-      }
+  h1 {
+    font-size: 18px;
+  }
 
-      button {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        min-height: 56px;
-        margin: 0;
-        padding: 14px 16px;
-        border: none;
-        border-radius: 14px;
-        background: var(--accent);
-        color: #fff;
-        font-size: 17px;
-        font-weight: 700;
-        cursor: pointer;
-      }
-
-      button:disabled {
-        opacity: 0.65;
-        cursor: not-allowed;
-      }
-
-      #message {
-        display: none;
-        width: 100%;
-        max-width: 100%;
-        margin-top: 14px;
-        padding: 14px 16px;
-        border-radius: 12px;
-        background: #fff5f5;
-        color: var(--danger);
-        font-weight: 700;
-        line-height: 1.6;
-      }
-
-      #message.show {
-        display: block;
-      }
-
-      #message.success {
-        background: #f0fdf4;
-        color: var(--success);
-      }
-
-      @media (max-width: 768px) {
-        body {
-          padding: 10px;
-        }
-
-        .card {
-          padding: 14px;
-        }
-
-        .row {
-          grid-template-columns: 1fr;
-        }
-
-        .choice-inline-3,
-        .choice-inline-4 {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 480px) {
-        body {
-          padding: 8px;
-        }
-
-        .container {
-          width: 100%;
-          max-width: 100%;
-        }
-
-        .card {
-          padding: 12px;
-          border-radius: 16px;
-        }
-
-        .section {
-          padding: 12px;
-          border-radius: 14px;
-        }
-
-        h1 {
-          font-size: 22px;
-        }
-
-        .lead {
-          font-size: 14px;
-        }
-
-        label.main-label {
-          font-size: 15px;
-        }
-
-        .choice-inline-2,
-        .choice-inline-3,
-        .choice-inline-4 {
-          grid-template-columns: 1fr;
-        }
-
-        .choice-card,
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        input[type="email"],
-        select,
-        textarea {
-          font-size: 16px;
-        }
-
-        button {
-          font-size: 16px;
-        }
-      }
-    </style>
+  h2 {
+    font-size: 16px;
+  }
+}
+</style>
   </head>
   <body>
     <div class="container">
